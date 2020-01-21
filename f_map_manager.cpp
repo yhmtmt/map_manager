@@ -214,11 +214,11 @@ void f_map_manager::render_data()
 {
   m_ch_map->lock();
   AWSMap2::vec3 cecef = m_ch_map->get_center();
-  AWSMap2::vec2 cbih;
+  AWSMap2::vec2 cblh;
   double calt = 0;
-  eceftobih(cecef.x, cecef.y, cecef.z, cbih.lat, cbih.lon, calt);
+  eceftoblh(cecef.x, cecef.y, cecef.z, cblh.lat, cblh.lon, calt);
   Mat Rwrld;
-  getwrldrot(cbih.lat, cbih.lon, Rwrld);
+  getwrldrot(cblh.lat, cblh.lon, Rwrld);
 
   float mres = m_ch_map->get_resolution();
   float mrng = m_ch_map->get_range();
@@ -357,7 +357,7 @@ void f_map_manager::render_data()
     }
 	
     for(int id = 0; id < cl.getNumLines(); id++){
-      const vector<AWSMap2::vec2> & pts_bih = cl.getPointsBIH(id);
+      const vector<AWSMap2::vec2> & pts_blh = cl.getPointsBLH(id);
       const vector<AWSMap2::vec3> & pts = cl.getPointsECEF(id);
       vector<Point2i> pts_wrld(pts.size());
 
@@ -381,7 +381,7 @@ void f_map_manager::render_data()
   }
 
   char frender[1024];
-  snprintf(frender, 1024, "%s/%f03.5-%f04.5.png", m_path, cbih.lat, cbih.lon);
+  snprintf(frender, 1024, "%s/%f03.5-%f04.5.png", m_path, cblh.lat, cblh.lon);
   imwrite(frender, img);
   m_ch_map->unlock();
 }
@@ -390,7 +390,7 @@ void f_map_manager::render_data()
 void f_map_manager::set_pos()
 {
   double x, y, z;
-  bihtoecef(lat * PI/180.f, lon * PI/180.f, 0, x, y, z);
+  blhtoecef(lat * PI/180.f, lon * PI/180.f, 0, x, y, z);
   m_ch_map->set_center((float)x, (float)y, (float)z);
   m_ch_map->set_range((float)range);
   m_ch_map->set_resolution((float)res);
